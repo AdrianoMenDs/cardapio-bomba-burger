@@ -57,9 +57,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   letter-spacing: 0.05em; text-transform: uppercase;
 }
 .status-badge.aberto { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #4ade80; }
+.status-badge.fechando { background: rgba(245,197,24,0.15); border: 1px solid rgba(245,197,24,0.3); color: #f5c518; }
 .status-badge.fechado { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #f87171; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; }
 .aberto .status-dot { background: #4ade80; animation: pulse 2s infinite; }
+.fechando .status-dot { background: #f5c518; animation: pulse 1s infinite; }
 .fechado .status-dot { background: #f87171; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
@@ -588,15 +590,15 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
         <div style="width:38px;height:38px;background:rgba(245,197,24,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📍</div>
         <div>
           <div style="font-size:0.88rem;font-weight:600;color:var(--text);">Bomba Burger</div>
-          <div style="font-size:0.74rem;color:var(--text2);margin-top:0.1rem;">Paraty — RJ</div>
+          <div style="font-size:0.74rem;color:var(--text2);margin-top:0.1rem;">R. Getúlio Vargas, 1751 — Parque Mambucaba, Angra dos Reis/RJ</div>
         </div>
       </div>
       <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d500!2d-44.529987!3d-23.006940!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDAwJzI1LjAiUyA0NMKwMzEnNDcuOSJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d500!2d-44.5304215!3d-23.0072198!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9daf1543915885%3A0xcc026356b329083c!2sR.%20Get%C3%BAlio%20Vargas%2C%201751%20-%20Parque%20Mambucaba%2C%20Angra%20dos%20Reis%20-%20RJ!5e0!3m2!1spt-BR!2sbr!4v1234567890"
         width="100%" height="180" style="border:0;display:block;filter:invert(0.85) hue-rotate(180deg) saturate(0.5) opacity(0.8);"
         allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
       </iframe>
-      <a href="https://www.google.com/maps/dir/?api=1&destination=-23.006940,-44.529987" target="_blank"
+      <a href="https://www.google.com/maps/dir/?api=1&destination=-23.0072198,-44.5304215" target="_blank"
         style="display:flex;align-items:center;justify-content:center;gap:0.5rem;width:100%;padding:0.85rem;background:var(--bg3);color:var(--yellow);border:none;border-top:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:600;cursor:pointer;text-decoration:none;transition:background 0.2s;"
         onmouseover="this.style.background='rgba(245,197,24,0.1)'" onmouseout="this.style.background='var(--bg3)'">
         🗺️ Abrir no Google Maps — Como Chegar
@@ -650,13 +652,9 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
           <button class="checkout-opt" id="opt-retirada" onclick="selecionarEntrega('retirada')">🏠 Retirada</button>
         </div>
         <div id="enderecoGroup">
-          <select class="checkout-input" id="bairroSelect" onchange="atualizarFrete()" style="margin-bottom:0.75rem;margin-top:0.75rem;cursor:pointer;appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 1rem center;background-color:var(--bg3);">
-            <option value="" disabled selected>Selecione seu bairro...</option>
-            <option value="Parque Mambucaba|5">Parque Mambucaba — R$ 5,00</option>
-          </select>
-          <input type="text" class="checkout-input" id="enderecoInput" placeholder="Rua, número, complemento...">
-          <div id="freteInfo" style="display:none;margin-top:0.6rem;font-size:0.78rem;color:var(--text2);padding:0.6rem 0.85rem;background:rgba(245,197,24,0.05);border:1px solid rgba(245,197,24,0.15);border-radius:8px;">
-            🚗 Frete: <span id="freteValor" style="color:var(--yellow);font-weight:600;"></span>
+          <input type="text" class="checkout-input" id="enderecoInput" placeholder="Rua, número, bairro..." style="margin-top:0.75rem;">
+          <div style="margin-top:0.5rem;font-size:0.75rem;color:var(--text3);padding:0.5rem 0.75rem;background:rgba(245,197,24,0.04);border:1px solid rgba(245,197,24,0.1);border-radius:8px;">
+            🚗 Frete a combinar — o estabelecimento confirma pelo WhatsApp
           </div>
         </div>
       </div>
@@ -698,9 +696,6 @@ let carrinho = {};
 let linguicas = {}; // ids dos hot dogs com linguiça
 let entrega = 'entrega';
 let pagamento = 'pix';
-let freteVal = 0;
-let bairroSel = '';
-
 const HOT_DOGS = [1,2,3,4,5,6,7]; // IDs dos hot dogs que têm opção linguiça
 
 function toggleLinguica(id) {
@@ -727,10 +722,46 @@ function estaAberto() {
   const dia = agora.getDay();
   const hora = agora.getHours() + agora.getMinutes() / 60;
   const h = HORARIOS[dia];
-  if (!h) return { aberto: false, msg: 'Segunda e Terça é nosso dia de folga! Voltamos na Quarta 💪' };
-  if (hora < h.abre) return { aberto: false, msg: 'Abrimos hoje às 19h30. Aguarda! 💪' };
-  if (hora >= h.fecha) return { aberto: false, msg: 'Encerramos por hoje. Até amanhã! 💪' };
-  return { aberto: true };
+
+  if (!h) return { status: 'fechado', msg: 'Segunda e Terça é nosso dia de folga! Voltamos na Quarta 💪' };
+
+  // Aberto
+  if (hora >= h.abre && hora < h.fecha - 0.5) {
+    return { status: 'aberto', fecha: h.fecha };
+  }
+
+  // Fechando em breve — a partir de 23h até 23h30
+  if (hora >= h.fecha - 0.5 && hora < h.fecha) {
+    const segsRestantes = Math.ceil((h.fecha - hora) * 3600);
+    const minutos = Math.floor(segsRestantes / 60);
+    const segundos = segsRestantes % 60;
+    return { status: 'fechando', minutos, segundos };
+  }
+
+  // Fechado
+  if (hora < h.abre) return { status: 'fechado', msg: 'Abrimos hoje às 19h30. Aguarda! 💪' };
+  return { status: 'fechado', msg: 'Encerramos por hoje. Até amanhã! 💪' };
+}
+
+let contagemInterval = null;
+
+function iniciarContagem(tipo, minutos) {
+  if (contagemInterval) clearInterval(contagemInterval);
+  let segsTotal = minutos * 60;
+
+  function atualizar() {
+    if (segsTotal <= 0) { clearInterval(contagemInterval); atualizarStatus(); return; }
+    const m = Math.floor(segsTotal / 60);
+    const s = segsTotal % 60;
+    const texto = tipo === 'fechando'
+      ? `🟡 Fecha em ${m}:${String(s).padStart(2,'0')}`
+      : `🟡 Abre em ${m}:${String(s).padStart(2,'0')}`;
+    const el = document.getElementById('statusText');
+    if (el) el.textContent = texto;
+    segsTotal--;
+  }
+  atualizar();
+  contagemInterval = setInterval(atualizar, 1000);
 }
 
 function atualizarStatus() {
@@ -751,17 +782,6 @@ function atualizarStatus() {
   }
 }
 
-function atualizarFrete() {
-  const select = document.getElementById('bairroSelect');
-  const val = select.value;
-  if (!val) { freteVal = 0; bairroSel = ''; document.getElementById('freteInfo').style.display = 'none'; return; }
-  const [bairro, frete] = val.split('|');
-  freteVal = parseFloat(frete);
-  bairroSel = bairro;
-  document.getElementById('freteValor').textContent = 'R$ ' + freteVal.toFixed(2).replace('.', ',');
-  document.getElementById('freteInfo').style.display = 'block';
-  renderCarrinho();
-}
 
 function adicionar(id) {
   if (!estaAberto().aberto) return;
@@ -789,12 +809,11 @@ function atualizarUI(id) {
   if (document.getElementById('modalOverlay').classList.contains('show')) renderCarrinho();
 }
 
-function calcularTotal(comFrete = false) {
-  const sub = Object.entries(carrinho).reduce((s, [id, qty]) => {
+function calcularTotal() {
+  return Object.entries(carrinho).reduce((s, [id, qty]) => {
     const extra = (HOT_DOGS.includes(parseInt(id)) && linguicas[id]) ? 2 : 0;
     return s + (PRODUTOS[id].preco + extra) * qty;
   }, 0);
-  return comFrete ? sub + (entrega === 'entrega' ? freteVal : 0) : sub;
 }
 
 function calcularItens() {
@@ -802,7 +821,7 @@ function calcularItens() {
 }
 
 function atualizarFloat() {
-  const total = calcularTotal(true);
+  const total = calcularTotal();
   const itens = calcularItens();
   const float = document.getElementById('carrinhoFloat');
   if (itens > 0) {
@@ -832,8 +851,7 @@ function fecharCarrinho(e) {
 function renderCarrinho() {
   const container = document.getElementById('cartItems');
   const empty = document.getElementById('cartEmpty');
-  const sub = calcularTotal(false);
-  const total = calcularTotal(true);
+  const total = calcularTotal();
 
   if (Object.keys(carrinho).length === 0) {
     container.innerHTML = '';
@@ -874,12 +892,7 @@ function renderCarrinho() {
     }).join('');
   }
 
-  let totalHtml = '';
-  if (freteVal > 0 && entrega === 'entrega') {
-    totalHtml = `<div style="font-size:0.78rem;color:var(--text2);margin-bottom:0.25rem;">Subtotal: R$ ${sub.toFixed(2).replace('.',',')}</div>
-    <div style="font-size:0.78rem;color:var(--text2);margin-bottom:0.25rem;">Frete (${bairroSel}): R$ ${freteVal.toFixed(2).replace('.',',')}</div>`;
-  }
-  document.getElementById('cartTotalModal').innerHTML = totalHtml + 'R$ ' + total.toFixed(2).replace('.', ',');
+  document.getElementById('cartTotalModal').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
   document.getElementById('carrinhoTotal').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
   const itens = calcularItens();
   document.getElementById('carrinhoCount').textContent = itens + (itens === 1 ? ' item' : ' itens');
@@ -903,9 +916,7 @@ function selecionarPagamento(tipo) {
 
 function finalizarPedido() {
   if (Object.keys(carrinho).length === 0) return;
-  const bairroVal = document.getElementById('bairroSelect') ? document.getElementById('bairroSelect').value : '';
   const enderecoVal = document.getElementById('enderecoInput').value.trim();
-  if (entrega === 'entrega' && !bairroVal) { alert('Por favor, selecione seu bairro!'); return; }
   if (entrega === 'entrega' && !enderecoVal) { alert('Por favor, informe seu endereço!'); return; }
 
   const itensTexto = Object.entries(carrinho).map(([id, qty]) => {
@@ -918,10 +929,9 @@ function finalizarPedido() {
     return `${qty}x ${nomeItem} — R$ ${(precoUnit * qty).toFixed(2).replace('.', ',')}`;
   }).join('\n');
 
-  const total = calcularTotal(true);
-  const freteTexto = freteVal > 0 && entrega === 'entrega' ? `\n🚗 *Frete:* R$ ${freteVal.toFixed(2).replace('.', ',')}` : '';
+  const total = calcularTotal();
   const entregaTexto = entrega === 'entrega'
-    ? `🚗 Delivery\n📍 Bairro: ${bairroSel}\n📍 Endereço: ${enderecoVal}${freteTexto}`
+    ? `🚗 Delivery\n📍 Endereço: ${enderecoVal}\n🚗 Frete: a combinar`
     : '🏠 Retirada no local';
   const pagTexto = pagamento === 'pix' ? '💸 Pix' : pagamento === 'cartao' ? '💳 Cartão na entrega' : '💵 Dinheiro';
 
