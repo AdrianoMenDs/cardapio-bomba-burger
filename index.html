@@ -751,7 +751,7 @@ function estaAberto() {
     const segsRestantes = Math.ceil((h.fecha - hora) * 3600);
     const minutos = Math.floor(segsRestantes / 60);
     const segundos = segsRestantes % 60;
-    return { aberto: false, status: 'fechando', minutos, segundos };
+    return { aberto: true, status: 'fechando', minutos, segundos };
   }
 
   if (hora < h.abre) return { aberto: false, status: 'fechado', msg: 'Abrimos hoje às 19h30. Aguarda! 💪' };
