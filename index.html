@@ -2,6 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+  <meta property="og:title" content="Bomba Burger — Cardápio Gourmet" />
+  <meta property="og:description" content="Hot dogs gourmet feitos na hora. Monte seu pedido e receba em casa! 🍔💪" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/AdrianoMenDs/cardapio-bomba-burger/main/og-image.jpg" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" type="image/png" href="./favicon-bomba.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bomba Burger — Cardápio Digital</title>
@@ -66,6 +71,37 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
 /* ── AVISO ADICIONAL ── */
+/* Ticker animado */
+.ticker-wrap {
+  overflow: hidden;
+  background: rgba(245,197,24,0.07);
+  border-top: 1px solid rgba(245,197,24,0.15);
+  border-bottom: 1px solid rgba(245,197,24,0.15);
+  padding: 0.5rem 0;
+  margin-bottom: 1.2rem;
+}
+.ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker 18s linear infinite;
+}
+.ticker-item {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--yellow);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-right: 3rem;
+}
+.ticker-item::before {
+  content: "🍔";
+  margin-right: 0.5rem;
+}
+@keyframes ticker {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
 .aviso-adicional {
   background: rgba(245,197,24,0.08);
   border-bottom: 1px solid rgba(245,197,24,0.15);
@@ -115,6 +151,18 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
   font-family: 'Bebas Neue', sans-serif;
   font-size: 0.7rem; color: var(--yellow);
   letter-spacing: 0.1em; margin-bottom: 0.3rem;
+}
+.produto-img {
+  width: 80px; height: 80px; border-radius: 12px;
+  object-fit: cover; flex-shrink: 0;
+  border: 1px solid var(--border);
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s ease;
+  cursor: pointer;
+}
+.produto-img:active {
+  transform: scale(1.12) translateY(-4px) rotate(-1.5deg);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.5), 0 4px 10px rgba(245,197,24,0.2);
+  border-color: rgba(245,197,24,0.4);
 }
 .produto-info { flex: 1; min-width: 0; }
 .produto-nome { font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; letter-spacing: 0.02em; }
@@ -333,7 +381,12 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
 </div>
 
 <!-- AVISO ADICIONAL -->
-<div class="aviso-adicional">
+<!-- TEXTO FIXO -->
+  <div style="text-align:center; padding: 0.8rem 1rem; margin-bottom: 0.5rem; font-size:0.78rem; color:var(--text2); line-height:1.6;">
+    A <strong style="color:var(--yellow);">Bombaburger</strong> agradece a sua preferência e boa viagem ao sabor! 🍔
+  </div>
+
+  <div class="aviso-adicional">
   💡 Adicional de R$ 2,00 para opção com linguiça
 </div>
 
@@ -407,6 +460,7 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
       </div>
 
       <div class="produto-card">
+        <img class="produto-img" src="https://raw.githubusercontent.com/AdrianoMenDs/cardapio-bomba-burger/main/dianabol.jpg" alt="Dianabol" />
         <div class="produto-info">
           <div class="produto-num">04</div>
           <div class="produto-nome">Dianabol </div>
@@ -424,6 +478,7 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
       </div>
 
       <div class="produto-card">
+        <img class="produto-img" src="https://raw.githubusercontent.com/AdrianoMenDs/cardapio-bomba-burger/main/trembolona.jpg" alt="Trembolona" />
         <div class="produto-info">
           <div class="produto-num">05</div>
           <div class="produto-nome">Trembolona </div>
@@ -441,6 +496,7 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
       </div>
 
       <div class="produto-card">
+        <img class="produto-img" src="https://raw.githubusercontent.com/AdrianoMenDs/cardapio-bomba-burger/main/bomba.jpg" alt="Bomba" />
         <div class="produto-info">
           <div class="produto-num">06</div>
           <div class="produto-nome">Bomba </div>
@@ -458,6 +514,7 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
       </div>
 
       <div class="produto-card">
+        <img class="produto-img" src="https://raw.githubusercontent.com/AdrianoMenDs/cardapio-bomba-burger/main/gh.jpg" alt="Gh" />
         <div class="produto-info">
           <div class="produto-num">07</div>
           <div class="produto-nome">GH </div>
@@ -629,7 +686,7 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
   <div style="text-align:center; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
     <p style="font-size:0.72rem; color:var(--text3);">Qua a Dom — 19h30 às 23h30 | Seg e Ter: Folga 💪</p>
     <p style="font-size:0.7rem; color:var(--text3); margin-top:1rem;">Cardápio criado por <a href="https://amendesweb.com.br" target="_blank" style="color:var(--yellow);text-decoration:none;font-weight:500;">Adriano Mendes</a> · Desenvolvedor Web</p>
-    <p style="font-size:0.7rem; color:var(--text3); margin-top:0.3rem;">Quer um cardápio assim? <a href="https://wa.me/5524998477936" target="_blank" style="color:var(--yellow);text-decoration:none;font-weight:500;">Fale comigo →</a></p>
+    <p style="font-size:0.7rem; color:var(--text3); margin-top:0.3rem;">Quer um cardápio assim? <a href="https://wa.me/5524999329190" target="_blank" style="color:var(--yellow);text-decoration:none;font-weight:500;">Fale comigo →</a></p>
   </div>
 
 </main>
@@ -737,25 +794,8 @@ const HORARIOS = {
 };
 
 function estaAberto() {
-  const agora = new Date();
-  const dia = agora.getDay();
-  const hora = agora.getHours() + agora.getMinutes() / 60;
-  const h = HORARIOS[dia];
-
-  if (!h) return { aberto: false, status: 'fechado', msg: 'Segunda e Terça é nosso dia de folga! Voltamos na Quarta 💪' };
-
-  if (hora >= h.abre && hora < h.fecha - 0.5)
-    return { aberto: true, status: 'aberto', fecha: h.fecha };
-
-  if (hora >= h.fecha - 0.5 && hora < h.fecha) {
-    const segsRestantes = Math.ceil((h.fecha - hora) * 3600);
-    const minutos = Math.floor(segsRestantes / 60);
-    const segundos = segsRestantes % 60;
-    return { aberto: true, status: 'fechando', minutos, segundos };
-  }
-
-  if (hora < h.abre) return { aberto: false, status: 'fechado', msg: 'Abrimos hoje às 19h30. Aguarda! 💪' };
-  return { aberto: false, status: 'fechado', msg: 'Encerramos por hoje. Até amanhã! 💪' };
+  // MODO TESTE — sempre aberto
+  return { aberto: true, status: 'aberto' };
 }
 
 let contagemInterval = null;
@@ -966,7 +1006,7 @@ function finalizarPedido() {
     `💳 *Pagamento:* ${pagTexto}`
   );
 
-  window.open(`https://wa.me/5524998477936?text=${msg}`, '_blank');
+  window.open(`https://wa.me/5524999329190?text=${msg}`, '_blank');
   fecharModal();
 }
 
