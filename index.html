@@ -371,11 +371,42 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
 /* ── FECHADO OVERLAY ── */
 .fechado-overlay {
   display: none; position: fixed; inset: 0; z-index: 300;
-  background: rgba(0,0,0,0.95); align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.96); align-items: center; justify-content: center;
   flex-direction: column; gap: 1rem; text-align: center; padding: 2rem;
 }
 .fechado-overlay.show { display: flex; }
 .fechado-icon { font-size: 3rem; }
+.fechado-logo-wrap {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.fechado-logo {
+  width: 180px; height: 180px; border-radius: 50%; object-fit: cover;
+  animation: logo-pulse 2.2s ease-in-out infinite;
+  position: relative; z-index: 2;
+}
+.fechado-logo-ring {
+  position: absolute;
+  width: 180px; height: 180px; border-radius: 50%;
+  border: 3px solid var(--yellow);
+  animation: ring-expand 2.2s ease-out infinite;
+  z-index: 1;
+}
+.fechado-logo-ring2 {
+  position: absolute;
+  width: 180px; height: 180px; border-radius: 50%;
+  border: 2px solid rgba(245,197,24,0.4);
+  animation: ring-expand 2.2s ease-out infinite 0.6s;
+  z-index: 1;
+}
+@keyframes logo-pulse {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 0px rgba(245,197,24,0); }
+  50%       { transform: scale(1.06); box-shadow: 0 0 30px rgba(245,197,24,0.35); }
+}
+@keyframes ring-expand {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
 .fechado-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--yellow); letter-spacing: 0.08em; }
 .fechado-sub { font-size: 0.9rem; color: var(--text2); max-width: 280px; line-height: 1.6; }
 .fechado-horario { font-size: 0.78rem; color: var(--text3); margin-top: 0.5rem; }
@@ -385,10 +416,14 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
 
 <!-- FECHADO -->
 <div class="fechado-overlay" id="fechadoOverlay">
-  <div class="fechado-icon">💪</div>
+  <div class="fechado-logo-wrap">
+    <div class="fechado-logo-ring"></div>
+    <div class="fechado-logo-ring2"></div>
+    <img class="fechado-logo" src="https://raw.githubusercontent.com/AdrianoMenDs/cardapio-bomba-burger/main/og-image.jpg" alt="Bomba Burger" />
+  </div>
   <div class="fechado-title">Bomba Burger</div>
   <p class="fechado-sub" id="fechadoMsg">No momento não estamos aceitando pedidos.</p>
-  <p class="fechado-horario">Qua a Dom — 19h30 às 23h30<br>Segunda e Terça: Folga! 💪</p>
+  <p class="fechado-horario">Qua a Dom — 19h25 às 23h30<br>Segunda e Terça: Folga! 💪</p>
 </div>
 
 <!-- HERO -->
@@ -709,7 +744,7 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
 
   <!-- RODAPÉ -->
   <div style="text-align:center; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
-    <p style="font-size:0.72rem; color:var(--text3);">Qua a Dom — 19h30 às 23h30 | Seg e Ter: Folga 💪</p>
+    <p style="font-size:0.72rem; color:var(--text3);">Qua a Dom — 19h25 às 23h30 | Seg e Ter: Folga 💪</p>
     <p style="font-size:0.7rem; color:var(--text3); margin-top:1rem;">Cardápio criado por <a href="https://amendesweb.com.br" target="_blank" style="color:var(--yellow);text-decoration:none;font-weight:500;">Adriano Mendes</a> · Desenvolvedor Web</p>
     <p style="font-size:0.7rem; color:var(--text3); margin-top:0.3rem;">Quer um cardápio assim? <a href="https://wa.me/5524999329190" target="_blank" style="color:var(--yellow);text-decoration:none;font-weight:500;">Fale comigo →</a></p>
   </div>
@@ -809,13 +844,13 @@ function toggleLinguica(id) {
   atualizarFloat();
 }
 
-// ── HORÁRIOS — Qua(3) a Dom(0), 19h30 às 23h30 ───────────
+// ── HORÁRIOS — Qua(3) a Dom(0), 19h25 às 23h30 ───────────
 const HORARIOS = {
-  0: { abre: 19.5, fecha: 23.5 },
-  3: { abre: 19.5, fecha: 23.5 },
-  4: { abre: 19.5, fecha: 23.5 },
-  5: { abre: 19.5, fecha: 23.5 },
-  6: { abre: 19.5, fecha: 23.5 },
+  0: { abre: 19.4167, fecha: 23.5 },
+  3: { abre: 19.4167, fecha: 23.5 },
+  4: { abre: 19.4167, fecha: 23.5 },
+  5: { abre: 19.4167, fecha: 23.5 },
+  6: { abre: 19.4167, fecha: 23.5 },
 };
 
 function estaAberto() {
@@ -824,7 +859,7 @@ function estaAberto() {
   const hora = agora.getHours() + agora.getMinutes() / 60;
   const h = HORARIOS[dia];
 
-  if (!h) return { aberto: false, status: 'fechado', msg: 'Segunda e Terça é nosso dia de folga! Voltamos na Quarta 💪' };
+  if (!h) return { aberto: false, status: 'fechado', msg: 'Segunda e Terça: Folga! Voltamos na Quarta 💪' };
 
   if (hora >= h.abre && hora < h.fecha - 0.5)
     return { aberto: true, status: 'aberto', fecha: h.fecha };
@@ -836,7 +871,7 @@ function estaAberto() {
     return { aberto: true, status: 'fechando', minutos, segundos };
   }
 
-  if (hora < h.abre) return { aberto: false, status: 'fechado', msg: 'Abrimos hoje às 19h30. Aguarda! 💪' };
+  if (hora < h.abre) return { aberto: false, status: 'fechado', msg: 'Abrimos hoje às 19h25. Aguarda! 💪' };
   return { aberto: false, status: 'fechado', msg: 'Encerramos por hoje. Até amanhã! 💪' };
 }
 
