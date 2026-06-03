@@ -817,9 +817,17 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
     <div class="modal-body">
       <div class="cart-items" id="cartItems"></div>
       <div class="cart-empty" id="cartEmpty" style="display:none;">Sua sacola está vazia 😕</div>
-      <div class="cart-total">
-        <span class="cart-total-label">Total do pedido</span>
-        <span class="cart-total-val" id="cartTotalModal">R$ 0,00</span>
+      <div class="cart-total" style="flex-direction:column;align-items:stretch;gap:0.3rem;">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text2);">
+          <span>Subtotal</span><span id="cartSubtotalModal">R$ 0,00</span>
+        </div>
+        <div id="freteRow" style="display:none;justify-content:space-between;font-size:0.8rem;color:#ff6b4a;">
+          <span>🚗 Frete</span><span id="cartFreteModal">R$ 0,00</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding-top:0.4rem;border-top:1px solid var(--border);">
+          <span class="cart-total-label">Total</span>
+          <span class="cart-total-val" id="cartTotalModal">R$ 0,00</span>
+        </div>
       </div>
 
       <!-- Entrega -->
@@ -830,9 +838,20 @@ main { padding: 1.5rem 1rem 8rem; max-width: 500px; margin: 0 auto; }
           <button class="checkout-opt" id="opt-retirada" onclick="selecionarEntrega('retirada')">🏠 Retirada</button>
         </div>
         <div id="enderecoGroup">
-          <input type="text" class="checkout-input" id="enderecoInput" placeholder="Rua, número, bairro..." style="margin-top:0.75rem;">
-          <div style="margin-top:0.5rem;font-size:0.75rem;color:#ff6b4a;padding:0.5rem 0.75rem;background:rgba(232,41,10,0.12);border:1px solid rgba(232,41,10,0.35);border-radius:8px;font-weight:500;">
-            🚗 Frete a combinar — confirmamos pelo WhatsApp
+          <input type="text" class="checkout-input" id="nomeInput" placeholder="Seu nome..." style="margin-top:0.75rem;">
+          <input type="text" class="checkout-input" id="enderecoInput" placeholder="Rua e número..." style="margin-top:0.5rem;">
+          <select class="checkout-input" id="bairroSelect" style="margin-top:0.5rem;" onchange="renderCarrinho()">
+            <option value="">Selecione seu bairro...</option>
+            <option value="Pereque|5">Pereque — R$ 5,00</option>
+            <option value="Boa Vista / Vila Residencial e Operária|7">Boa Vista / Vila Residencial e Operária — R$ 7,00</option>
+            <option value="Vila Histórica / Praia Vermelha|10">Vila Histórica / Praia Vermelha — R$ 10,00</option>
+            <option value="Prainha / Praia Brava|15">Prainha / Praia Brava — R$ 15,00</option>
+            <option value="Barlavento|12">Barlavento — R$ 12,00</option>
+            <option value="Usina|20">Usina — R$ 20,00</option>
+            <option value="Tarituba|20">Tarituba — R$ 20,00</option>
+          </select>
+          <div id="freteInfo" style="margin-top:0.5rem;font-size:0.75rem;color:#ff6b4a;padding:0.5rem 0.75rem;background:rgba(232,41,10,0.12);border:1px solid rgba(232,41,10,0.35);border-radius:8px;font-weight:500;">
+            🚗 Selecione o bairro para ver o frete
           </div>
         </div>
       </div>
@@ -994,11 +1013,19 @@ function atualizarUI(id) {
   if (document.getElementById('modalOverlay').classList.contains('show')) renderCarrinho();
 }
 
+function getFrete() {
+  if (entrega !== 'entrega') return 0;
+  const sel = document.getElementById('bairroSelect');
+  if (!sel || !sel.value) return 0;
+  return parseFloat(sel.value.split('|')[1]) || 0;
+}
+
 function calcularTotal() {
-  return Object.entries(carrinho).reduce((s, [id, qty]) => {
+  const subtotal = Object.entries(carrinho).reduce((s, [id, qty]) => {
     const extra = (HOT_DOGS.includes(parseInt(id)) && linguicas[id]) ? 2 : 0;
     return s + (PRODUTOS[id].preco + extra) * qty;
   }, 0);
+  return subtotal + getFrete();
 }
 
 function calcularItens() {
@@ -1077,8 +1104,29 @@ function renderCarrinho() {
     }).join('');
   }
 
+  const frete = getFrete();
+  const subtotal = total - frete;
+  document.getElementById('cartSubtotalModal').textContent = 'R$ ' + subtotal.toFixed(2).replace('.', ',');
+  const freteRow = document.getElementById('freteRow');
+  if (frete > 0) {
+    freteRow.style.display = 'flex';
+    document.getElementById('cartFreteModal').textContent = 'R$ ' + frete.toFixed(2).replace('.', ',');
+  } else {
+    freteRow.style.display = 'none';
+  }
+  // Update freteInfo box
+  const sel = document.getElementById('bairroSelect');
+  const freteInfo = document.getElementById('freteInfo');
+  if (freteInfo) {
+    if (sel && sel.value) {
+      const bairroNome = sel.value.split('|')[0];
+      freteInfo.textContent = '🚗 Frete para ' + bairroNome + ': R$ ' + frete.toFixed(2).replace('.', ',');
+    } else {
+      freteInfo.textContent = '🚗 Selecione o bairro para ver o frete';
+    }
+  }
   document.getElementById('cartTotalModal').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
-  document.getElementById('carrinhoTotal').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+  document.getElementById('carrinhoTotal').textContent = 'R$ ' + (total - frete).toFixed(2).replace('.', ',');
   const itens = calcularItens();
   document.getElementById('carrinhoCount').textContent = itens + (itens === 1 ? ' item' : ' itens');
 }
@@ -1101,8 +1149,19 @@ function selecionarPagamento(tipo) {
 
 function finalizarPedido() {
   if (Object.keys(carrinho).length === 0) return;
-  const enderecoVal = document.getElementById('enderecoInput').value.trim();
-  if (entrega === 'entrega' && !enderecoVal) { alert('Por favor, informe seu endereço!'); return; }
+  if (entrega === 'entrega') {
+    if (!document.getElementById('nomeInput').value.trim()) { alert('Por favor, informe seu nome!'); return; }
+    if (!document.getElementById('enderecoInput').value.trim()) { alert('Por favor, informe seu endereço!'); return; }
+    if (!document.getElementById('bairroSelect').value) { alert('Por favor, selecione seu bairro!'); return; }
+  }
+
+  const nomeVal = entrega === 'entrega' ? document.getElementById('nomeInput').value.trim() : '';
+  const enderecoVal = entrega === 'entrega' ? document.getElementById('enderecoInput').value.trim() : '';
+  const bairroSel = entrega === 'entrega' ? document.getElementById('bairroSelect') : null;
+  const bairroNome = bairroSel && bairroSel.value ? bairroSel.value.split('|')[0] : '';
+  const frete = getFrete();
+  const total = calcularTotal();
+  const subtotal = total - frete;
 
   const itensTexto = Object.entries(carrinho).map(([id, qty]) => {
     const p = PRODUTOS[id];
@@ -1114,21 +1173,22 @@ function finalizarPedido() {
     return `${qty}x ${nomeItem} — R$ ${(precoUnit * qty).toFixed(2).replace('.', ',')}`;
   }).join('\n');
 
-  const total = calcularTotal();
   const entregaTexto = entrega === 'entrega'
-    ? `🚗 Delivery\n📍 Endereço: ${enderecoVal}\n🚗 Frete: a combinar`
+    ? `🚗 Delivery\n👤 Nome: ${nomeVal}\n📍 Endereço: ${enderecoVal}\n📍 Bairro: ${bairroNome}\n🚗 Frete: R$ ${frete.toFixed(2).replace('.', ',')}`
     : '🏠 Retirada no local';
   const pagTexto = pagamento === 'pix' ? '💸 Pix' : pagamento === 'cartao' ? '💳 Cartão na entrega' : '💵 Dinheiro';
+  const freteTexto = frete > 0 ? `\n💰 Subtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}\n🚗 Frete: R$ ${frete.toFixed(2).replace('.', ',')}` : '';
 
   const msg = encodeURIComponent(
     `🌭 *Pedido — Bomba Burger*\n\n` +
-    `${itensTexto}\n\n` +
+    `${itensTexto}` +
+    `${freteTexto}\n` +
     `💰 *Total: R$ ${total.toFixed(2).replace('.', ',')}*\n\n` +
     `${entregaTexto}\n` +
     `💳 *Pagamento:* ${pagTexto}`
   );
 
-  window.open(`https://wa.me/5524999329190?text=${msg}`, '_blank');
+  window.open(`https://wa.me/5524998477936?text=${msg}`, '_blank');
   fecharModal();
 }
 
