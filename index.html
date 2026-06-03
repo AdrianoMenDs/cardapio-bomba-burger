@@ -912,25 +912,8 @@ const HORARIOS = {
 };
 
 function estaAberto() {
-  const agora = new Date();
-  const dia = agora.getDay();
-  const hora = agora.getHours() + agora.getMinutes() / 60;
-  const h = HORARIOS[dia];
-
-  if (!h) return { aberto: false, status: 'fechado', msg: 'Segunda e Terça: Folga! Voltamos na Quarta 💪' };
-
-  if (hora >= h.abre && hora < h.fecha - 0.5)
-    return { aberto: true, status: 'aberto', fecha: h.fecha };
-
-  if (hora >= h.fecha - 0.5 && hora < h.fecha) {
-    const segsRestantes = Math.ceil((h.fecha - hora) * 3600);
-    const minutos = Math.floor(segsRestantes / 60);
-    const segundos = segsRestantes % 60;
-    return { aberto: true, status: 'fechando', minutos, segundos };
-  }
-
-  if (hora < h.abre) return { aberto: false, status: 'fechado', msg: 'Abrimos hoje às 19h25. Aguarda! 💪' };
-  return { aberto: false, status: 'fechado', msg: 'Encerramos por hoje. Até amanhã! 💪' };
+  // MODO TESTE — sempre aberto
+  return { aberto: true, status: 'aberto' };
 }
 
 let contagemInterval = null;
