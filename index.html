@@ -915,8 +915,16 @@ function toggleLinguica(id) {
   if (linguicas[id]) {
     delete linguicas[id];
   } else {
-    linguicas[id] = true;
+    linguicas[id] = 1;
   }
+  renderCarrinho();
+  atualizarFloat();
+}
+
+function setLinguica(id, qty) {
+  qty = parseInt(qty);
+  if (qty <= 0) delete linguicas[id];
+  else linguicas[id] = qty;
   renderCarrinho();
   atualizarFloat();
 }
@@ -1039,8 +1047,8 @@ function getFrete() {
 
 function calcularTotal() {
   const subtotal = Object.entries(carrinho).reduce((s, [id, qty]) => {
-    const extra = (HOT_DOGS.includes(parseInt(id)) && linguicas[id]) ? 2 : 0;
-    return s + (PRODUTOS[id].preco + extra) * qty;
+    const linguicaQty = HOT_DOGS.includes(parseInt(id)) ? (linguicas[id] || 0) : 0;
+    return s + (PRODUTOS[id].preco * qty) + (linguicaQty * 2);
   }, 0);
   return subtotal + getFrete();
 }
@@ -1092,23 +1100,25 @@ function renderCarrinho() {
     container.innerHTML = Object.entries(carrinho).map(([id, qty]) => {
       const p = PRODUTOS[id];
       const isHotDog = HOT_DOGS.includes(parseInt(id));
-      const temLinguica = linguicas[id] || false;
-      const extra = (isHotDog && temLinguica) ? 2 : 0;
-      const precoUnit = p.preco + extra;
+      const linguicaQty = isHotDog ? (linguicas[id] || 0) : 0;
+      const extra = linguicaQty * 2;
+      const precoUnit = p.preco;
+      const totalItem = (precoUnit * qty) + (extra);
       const linguicaHtml = isHotDog ? `
-        <div class="linguica-toggle">
-          <span class="linguica-label">🌭 Trocar por linguiça <span>+R$ 2,00</span></span>
-          <label class="toggle-switch">
-            <input type="checkbox" ${temLinguica ? 'checked' : ''} onchange="toggleLinguica(${id})">
-            <span class="toggle-slider"></span>
-          </label>
+        <div class="linguica-toggle" style="align-items:center;">
+          <span class="linguica-label">🌭 Com linguiça <span>+R$ 2,00 cada</span></span>
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <button class="cart-qty-btn" onclick="setLinguica('${id}', ${Math.max(0, linguicaQty-1)})" style="width:26px;height:26px;font-size:0.9rem;">−</button>
+            <span style="min-width:18px;text-align:center;font-size:0.85rem;color:var(--text1);">${linguicaQty}</span>
+            <button class="cart-qty-btn" onclick="setLinguica('${id}', ${Math.min(qty, linguicaQty+1)})" style="width:26px;height:26px;font-size:0.9rem;">+</button>
+          </div>
         </div>` : '';
       return `<div class="cart-item" style="flex-direction:column;align-items:stretch;">
         <div style="display:flex;align-items:center;gap:0.75rem;">
           <span class="cart-item-emoji">${p.emoji}</span>
           <div class="cart-item-info">
-            <div class="cart-item-nome">${p.nome}${temLinguica ? ' <span style="font-size:0.65rem;color:var(--yellow);font-weight:600;">c/ linguiça</span>' : ''}</div>
-            <div class="cart-item-preco">R$ ${(precoUnit * qty).toFixed(2).replace('.',',')}</div>
+            <div class="cart-item-nome">${p.nome}${linguicaQty > 0 ? ` <span style="font-size:0.65rem;color:var(--yellow);font-weight:600;">${linguicaQty} c/ linguiça</span>` : ''}</div>
+            <div class="cart-item-preco">R$ ${totalItem.toFixed(2).replace('.',',')}</div>
           </div>
           <div class="cart-item-qty">
             <button class="cart-qty-btn" onclick="removerModal(${id})">−</button>
@@ -1184,10 +1194,10 @@ function finalizarPedido() {
   const itensTexto = Object.entries(carrinho).map(([id, qty]) => {
     const p = PRODUTOS[id];
     const isHotDog = HOT_DOGS.includes(parseInt(id));
-    const temLinguica = linguicas[id] || false;
-    const extra = (isHotDog && temLinguica) ? 2 : 0;
-    const precoUnit = p.preco + extra;
-    const nomeItem = temLinguica ? p.nome + ' (c/ linguiça)' : p.nome;
+    const linguicaQty = isHotDog ? (linguicas[id] || 0) : 0;
+    const extra = linguicaQty * 2;
+    const precoUnit = p.preco;
+    const nomeItem = linguicaQty > 0 ? `${p.nome} (${linguicaQty} c/ linguiça)` : p.nome;
     return `${qty}x ${nomeItem} — R$ ${(precoUnit * qty).toFixed(2).replace('.', ',')}`;
   }).join('\n');
 
